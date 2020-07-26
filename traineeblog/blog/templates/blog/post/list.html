@@ -1,0 +1,34 @@
+{% extends "blog/base.html" %}
+{% load blog_tags %}
+{% block title %}VVKBlog{% endblock %}
+{% block content %}
+  <h1>Mindfulness Of Being</h1> 
+  <h5> В конце концов партия объявит, что дважды два — пять, и придется в это верить. Рано или поздно она издаст такой указ, к этому неизбежно ведет логика ее власти. Ее философия молчаливо отрицает не только верность твоих восприятии, но и само существование внешнего мира. Ересь из ересей — здравый смысл</h5>
+  {% if tag %}
+  <h2>Тэги публикации "{{ tag.name }}"</h2>
+  {% endif %}
+  {% for post in posts %}
+
+    <h2>
+      <a href="{{ post.get_absolute_url }}">
+        {{ post.title }}
+      
+      </a>
+    </h2>
+<p class="tags">
+  Тэги:
+  {% for tag in post.tags.all %}
+    <a href="{% url "blog:post_list_by_tag" tag.slug %}">
+      {{ tag.name }}
+    </a>
+    {% if not forloop.last %}, {% endif %}
+  {% endfor %}
+</p>
+    <p class="date">
+      Опубликовано {{ post.publish }} пользователем: {{ post.author }}
+    </p>
+    {{ post.body|markdown|truncatewords_html:30 }}
+    
+  {% endfor %}
+  {% include "pagination.html" with page=posts %}
+{% endblock %}
